@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Chill green palette  -->
+    <color name="colorPrimary">#004445</color>
+    <color name="colorPrimaryDark">#021c1e</color>
+    <color name="colorAccent">#6fb98f</color>
+    <color name="colorAccentDark">#2c7873</color>
+
+    <!--  Red palette  -->
+    <color name="red_palette_darker">#461220</color>
+    <color name="red_palette_dark">#8c2f39</color>
+    <color name="red_palette_mid">#b23a48</color>
+    <color name="red_palette_nude">#fcb9b2</color>
+    <color name="red_palette_pale">#fed0bb</color>
+
+    <!--  Pint palette  -->
+    <color name="pint_palette_red">#e63946</color>
+    <color name="pint_palette_white">#f1faee</color>
+    <color name="pint_palette_lightBlue">#a8dadc</color>
+    <color name="pint_palette_midBlue">#457b9d</color>
+    <color name="pint_palette_darkBlue">#1d3557</color>
+
+    <!--  Regular common colors  -->
+    <color name="actualBlack">#000000</color>
+    <color name="actualWhite">#FFFFFF</color>
+    <color name="actualTransparent">#00FFFFFF</color>
+
+
+</resources>

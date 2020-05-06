@@ -1,0 +1,2 @@
+rootProject.name='MoviSeries'
+include ':app'
