@@ -10,8 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.ayova.moviseries.R
 import com.ayova.moviseries.adapters.HomeRecyclerAdapter
-import com.ayova.moviseries.models.Genre
-import com.ayova.moviseries.models.Movie_Genres
+import com.ayova.moviseries.models.*
 import com.ayova.moviseries.omdb_api.TmdbApi
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call
@@ -24,7 +23,14 @@ import retrofit2.Response
 class HomeFragment : Fragment() {
 
     val TAG = "miapp"
-    val genres = ArrayList<Genre>()
+    val movieGenres = ArrayList<Genre>()
+    val tvGenres = ArrayList<Genre>()
+    val discoveredMovies = ArrayList<DiscoveredMovie>()
+    val discoveredTV = ArrayList<DiscoveredTV>()
+    val searchedMovies = ArrayList<SearchedMovie>()
+    val searchedTVs = ArrayList<SearchedTV>()
+    var findMovie: MovieDetails? = null
+    var findTvShow: TVShowDetails? = null
     private var recyclerAdapter: HomeRecyclerAdapter? = null
 
     override fun onCreateView(
@@ -41,22 +47,32 @@ class HomeFragment : Fragment() {
         // Recycler
         val layoutManager = LinearLayoutManager(activity!!.applicationContext)
         home_recyclerview.layoutManager = layoutManager
-        recyclerAdapter = HomeRecyclerAdapter(genres)
+        recyclerAdapter = HomeRecyclerAdapter(movieGenres)
         home_recyclerview.adapter = recyclerAdapter
 
+        //init connection
         TmdbApi.initService()
-        getGenres()
+
+        //start requesting
+        getMovieGenres()
+        getTVGenres()
+        discoverMovies()
+        discoverTV()
+        searchedMovie()
+        searchedTV()
+        findMovieById()
+        findTvShowById()
     }
 
-    private fun getGenres() {
+    private fun getMovieGenres() {
         val call = TmdbApi.service.getMovieGenres()
         call.enqueue(object : Callback<Movie_Genres> {
             override fun onResponse(call: Call<Movie_Genres>, response: Response<Movie_Genres>) {
                 val body = response.body()
                 if (response.isSuccessful && body != null) {
-                    Log.i(TAG, body.genres.toString())
-                    genres.clear()
-                    genres.addAll(body.genres)
+                    movieGenres.clear()
+                    movieGenres.addAll(body.genres)
+                    Log.v(TAG, movieGenres.toString())
                     // Imprimir aqui el listado
 //                    body.genres.forEach{ genre ->
 //                        Log.v(TAG, genre.name)
@@ -67,6 +83,172 @@ class HomeFragment : Fragment() {
                 }
             }
             override fun onFailure(call: Call<Movie_Genres>, t: Throwable) {
+                Log.e(TAG, t.message!!)
+            }
+        })
+    }
+
+    private fun getTVGenres() {
+        val call = TmdbApi.service.getTVGenres()
+        call.enqueue(object : Callback<TV_Genres> {
+            override fun onResponse(call: Call<TV_Genres>, response: Response<TV_Genres>) {
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    tvGenres.clear()
+                    tvGenres.addAll(body.genres)
+                    // Imprimir aqui el listado
+                    Log.v(TAG, tvGenres.toString())
+//                    body.genres.forEach{ genre ->
+//                        Log.v(TAG, genre.name)
+//                    }
+//                    recyclerAdapter?.notifyDataSetChanged()
+                } else {
+                    Log.e(TAG, response.errorBody()!!.string())
+                }
+            }
+            override fun onFailure(call: Call<TV_Genres>, t: Throwable) {
+                Log.e(TAG, t.message!!)
+            }
+        })
+    }
+
+    private fun discoverMovies() {
+        val call = TmdbApi.service.discoverMovies()
+        call.enqueue(object : Callback<DiscoverMovies> {
+            override fun onResponse(call: Call<DiscoverMovies>, response: Response<DiscoverMovies>) {
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    discoveredMovies.clear()
+                    discoveredMovies.addAll(body.results)
+                    // Imprimir aqui el listado
+                    Log.v(TAG, discoveredMovies.toString())
+//                    discoveredMovies.forEach{ movie ->
+//                        Log.v(TAG, movie.title)
+//                    }
+//                    recyclerAdapter?.notifyDataSetChanged()
+                } else {
+                    Log.e(TAG, response.errorBody()!!.string())
+                }
+            }
+            override fun onFailure(call: Call<DiscoverMovies>, t: Throwable) {
+                Log.e(TAG, t.message!!)
+            }
+        })
+    }
+
+    private fun discoverTV() {
+        val call = TmdbApi.service.discoverTV()
+        call.enqueue(object : Callback<DiscoverTV> {
+            override fun onResponse(call: Call<DiscoverTV>, response: Response<DiscoverTV>) {
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    discoveredTV.clear()
+                    discoveredTV.addAll(body.results)
+                    // Imprimir aqui el listado
+                    Log.v(TAG, discoveredTV.toString())
+//                    discoveredMovies.forEach{ movie ->
+//                        Log.v(TAG, movie.title)
+//                    }
+//                    recyclerAdapter?.notifyDataSetChanged()
+                } else {
+                    Log.e(TAG, response.errorBody()!!.string())
+                }
+            }
+            override fun onFailure(call: Call<DiscoverTV>, t: Throwable) {
+                Log.e(TAG, t.message!!)
+            }
+        })
+    }
+
+    private fun searchedMovie() {
+        val call = TmdbApi.service.searchMovie(query = "ghost")
+        call.enqueue(object : Callback<SearchedMovies> {
+            override fun onResponse(call: Call<SearchedMovies>, response: Response<SearchedMovies>) {
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    searchedMovies.clear()
+                    searchedMovies.addAll(body.results)
+                    // Imprimir aqui el listado
+                    Log.v(TAG, searchedMovies.toString())
+//                    discoveredMovies.forEach{ movie ->
+//                        Log.v(TAG, movie.title)
+//                    }
+//                    recyclerAdapter?.notifyDataSetChanged()
+                } else {
+                    Log.e(TAG, response.errorBody()!!.string())
+                }
+            }
+            override fun onFailure(call: Call<SearchedMovies>, t: Throwable) {
+                Log.e(TAG, t.message!!)
+            }
+        })
+    }
+
+    private fun searchedTV() {
+        val call = TmdbApi.service.searchTV(query = "flash")
+        call.enqueue(object : Callback<SearchedTVs> {
+            override fun onResponse(call: Call<SearchedTVs>, response: Response<SearchedTVs>) {
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    searchedTVs.clear()
+                    searchedTVs.addAll(body.results)
+                    // Imprimir aqui el listado
+                    Log.v(TAG, searchedTVs.toString())
+//                    discoveredMovies.forEach{ movie ->
+//                        Log.v(TAG, movie.title)
+//                    }
+//                    recyclerAdapter?.notifyDataSetChanged()
+                } else {
+                    Log.e(TAG, response.errorBody()!!.string())
+                }
+            }
+            override fun onFailure(call: Call<SearchedTVs>, t: Throwable) {
+                Log.e(TAG, t.message!!)
+            }
+        })
+    }
+
+    private fun findMovieById() {
+        val call = TmdbApi.service.findMovieById(movie_id = "419704")
+        call.enqueue(object : Callback<MovieDetails> {
+            override fun onResponse(call: Call<MovieDetails>, response: Response<MovieDetails>) {
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    findMovie = body
+                    // Imprimir aqui el listado
+                    Log.v(TAG, findMovie.toString())
+//                    discoveredMovies.forEach{ movie ->
+//                        Log.v(TAG, movie.title)
+//                    }
+//                    recyclerAdapter?.notifyDataSetChanged()
+                } else {
+                    Log.e(TAG, response.errorBody()!!.string())
+                }
+            }
+            override fun onFailure(call: Call<MovieDetails>, t: Throwable) {
+                Log.e(TAG, t.message!!)
+            }
+        })
+    }
+
+    private fun findTvShowById() {
+        val call = TmdbApi.service.findTVShowById(tv_id = "63247")
+        call.enqueue(object : Callback<TVShowDetails> {
+            override fun onResponse(call: Call<TVShowDetails>, response: Response<TVShowDetails>) {
+                val body = response.body()
+                if (response.isSuccessful && body != null) {
+                    findTvShow = body
+                    // Imprimir aqui el listado
+                    Log.v(TAG, findTvShow.toString())
+//                    discoveredMovies.forEach{ movie ->
+//                        Log.v(TAG, movie.title)
+//                    }
+//                    recyclerAdapter?.notifyDataSetChanged()
+                } else {
+                    Log.e(TAG, response.errorBody()!!.string())
+                }
+            }
+            override fun onFailure(call: Call<TVShowDetails>, t: Throwable) {
                 Log.e(TAG, t.message!!)
             }
         })
