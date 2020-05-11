@@ -1,5 +1,6 @@
 package com.ayova.moviseries.views
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,12 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.ayova.moviseries.R
+import com.ayova.moviseries.adapters.HomeItemsRecyclerAdapter
 import com.ayova.moviseries.adapters.HomeRecyclerAdapter
 import com.ayova.moviseries.models.*
 import com.ayova.moviseries.omdb_api.TmdbApi
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.home_recycler_item.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,6 +36,7 @@ class HomeFragment : Fragment() {
     var findMovie: MovieDetails? = null
     var findTvShow: TVShowDetails? = null
     private var recyclerAdapter: HomeRecyclerAdapter? = null
+    private var recyclerAdapter2: HomeItemsRecyclerAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,8 +52,19 @@ class HomeFragment : Fragment() {
         // Recycler
         val layoutManager = LinearLayoutManager(activity!!.applicationContext)
         home_recyclerview.layoutManager = layoutManager
-        recyclerAdapter = HomeRecyclerAdapter(movieGenres)
+        recyclerAdapter = HomeRecyclerAdapter(movieGenres, activity!!.applicationContext)
         home_recyclerview.adapter = recyclerAdapter
+
+        // Recycler
+//        val layoutManager2 = LinearLayoutManager(activity!!.applicationContext, LinearLayoutManager.HORIZONTAL, false)
+//        home_recycler_item_recycler.layoutManager = layoutManager2
+//        recyclerAdapter2 = HomeItemsRecyclerAdapter(arrayListOf("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.humanesociety.org%2Fsites%2Fdefault%2Ffiles%2Fstyles%2F1240x698%2Fpublic%2F2018%2F06%2Fcat-217679.jpg%3Fh%3Dc4ed616d%26itok%3D3qHaqQ56&f=1&nofb=1",
+//            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.humanesociety.org%2Fsites%2Fdefault%2Ffiles%2Fstyles%2F1240x698%2Fpublic%2F2018%2F06%2Fcat-217679.jpg%3Fh%3Dc4ed616d%26itok%3D3qHaqQ56&f=1&nofb=1",
+//            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.humanesociety.org%2Fsites%2Fdefault%2Ffiles%2Fstyles%2F1240x698%2Fpublic%2F2018%2F06%2Fcat-217679.jpg%3Fh%3Dc4ed616d%26itok%3D3qHaqQ56&f=1&nofb=1",
+//            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.humanesociety.org%2Fsites%2Fdefault%2Ffiles%2Fstyles%2F1240x698%2Fpublic%2F2018%2F06%2Fcat-217679.jpg%3Fh%3Dc4ed616d%26itok%3D3qHaqQ56&f=1&nofb=1",
+//            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.humanesociety.org%2Fsites%2Fdefault%2Ffiles%2Fstyles%2F1240x698%2Fpublic%2F2018%2F06%2Fcat-217679.jpg%3Fh%3Dc4ed616d%26itok%3D3qHaqQ56&f=1&nofb=1",
+//            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.humanesociety.org%2Fsites%2Fdefault%2Ffiles%2Fstyles%2F1240x698%2Fpublic%2F2018%2F06%2Fcat-217679.jpg%3Fh%3Dc4ed616d%26itok%3D3qHaqQ56&f=1&nofb=1"))
+//        home_recycler_item_recycler.adapter = recyclerAdapter2
 
         //init connection
         TmdbApi.initService()
@@ -63,6 +79,16 @@ class HomeFragment : Fragment() {
         findMovieById()
         findTvShowById()
     }
+
+
+
+
+
+
+
+    /**
+     * Functions underneath
+     */
 
     private fun getMovieGenres() {
         val call = TmdbApi.service.getMovieGenres()
@@ -253,4 +279,4 @@ class HomeFragment : Fragment() {
             }
         })
     }
-}
+    }
