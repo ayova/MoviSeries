@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "73728888411",
+    "firebase_url": "https://moviseries-2711.firebaseio.com",
+    "project_id": "moviseries-2711",
+    "storage_bucket": "moviseries-2711.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73728888411:android:695a279fbb57e0707ab97e",
+        "android_client_info": {
+          "package_name": "com.ayova.moviseries"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73728888411-ce3bqt6s1lij6pb5f8alu9nsj13ibqhp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ayova.moviseries",
+            "certificate_hash": "07734e3f80c5b892f4b2ac33306742ef44a26aff"
+          }
+        },
+        {
+          "client_id": "73728888411-jqdgttmmcom1tv22nvecbo4mattek8kb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdMJOqzsC_gU976myHSGJXQbaNcCuwfLk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73728888411-jqdgttmmcom1tv22nvecbo4mattek8kb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

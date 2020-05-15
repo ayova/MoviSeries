@@ -1,5 +1,6 @@
 package com.ayova.moviseries.adapters
 
+import android.content.Context
 import android.media.Image
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.ayova.moviseries.R
 import com.ayova.moviseries.models.DiscoveredMovie
@@ -16,6 +18,7 @@ import com.ayova.moviseries.tmdb_api.TmdbApi
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.home_movies_shows_recycler.view.*
+import kotlin.coroutines.coroutineContext
 
 /**
  * Recycler for each item inside each list in the Home fragment
@@ -31,8 +34,7 @@ class HomeItemsRecycler(private val listOfItems: ArrayList<Any>) : RecyclerView.
     }
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         val data = listOfItems[position]
-        holder.title.maxWidth = holder.image.width
-        Log.v(TAG, data.toString())
+
         if (data is DiscoveredMovie) {
             Log.v(TAG, data.toString())
             holder.title.text = data.title

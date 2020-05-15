@@ -44,6 +44,5 @@ class HomeListsRecycler(private val homeLists: ArrayList<HomeList>?, actContext:
     inner class MainViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val categoryTitle: MaterialTextView = v.findViewById(R.id.home_recycler_item_category)
         val recyclerView: RecyclerView = itemView.home_recycler_item_recycler
-
     }
 }

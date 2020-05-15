@@ -7,10 +7,7 @@ import android.os.Handler
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.ayova.moviseries.models.Movie_Genres
-import com.ayova.moviseries.views.AccountFragment
-import com.ayova.moviseries.views.HomeFragment
-import com.ayova.moviseries.views.MyListsFragment
-import com.ayova.moviseries.views.SearchFragment
+import com.ayova.moviseries.views.*
 import kotlinx.android.synthetic.main.activity_main.*
 import render.animations.Attention
 import render.animations.Fade
@@ -24,16 +21,20 @@ import java.lang.Error
 class MainActivity : AppCompatActivity() {
 
     private val TAG = "miapp"
-    private var genresList = ArrayList<Movie_Genres>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setupBottomNavigation()
+        supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,HomeFragment()).commit()
 
-//        startLogoAnimation()
-        straightHomeNoAnim()
+    }
 
+    /**
+     * Initial setup of the bottom navigation for the entire app
+     */
+    private fun setupBottomNavigation(){
         main_bottom_navigation.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 /** Home fragment */
@@ -43,7 +44,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 /** My lists fragment */
                 R.id.action_myLists -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,MyListsFragment()).commit()
+//                    supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,MyListsFragment()).commit()
+                    supportFragmentManager.beginTransaction().replace(R.id.main_frame_container, ItemDetails.newInstance("asd","asdefg")).commit()
+
                     true
                 }
                 /** Search fragment */
@@ -57,57 +60,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 else -> {
-                    //TODO might need to add an exception in here
+                    //TODO exception handling may be needed
                     false
                 }
             }
         }
-
-
-//        OmdbApi.initService()
-//        getGenres()
-    }
-
-    /**
-     * Logo animation on start
-     */
-    private fun startLogoAnimation(){
-        val logoAnim: ImageView = findViewById(R.id.main_logo_for_anim)
-        val render = Render(this)
-
-        render.setAnimation(Fade().In(logoAnim).setDuration(1000))
-        render.start()
-        Handler().postDelayed({
-            render.setAnimation(Attention().Flash(logoAnim).setDuration(900))
-            render.start()
-            Handler().postDelayed({
-                render.setAnimation(Fade().Out(logoAnim).setDuration(1600))
-                render.start()
-                Handler().postDelayed({
-                    // hide imageView
-                    logoAnim.visibility = FrameLayout.GONE
-                    // reveal bottom nav menu
-                    main_bottom_navigation.visibility = FrameLayout.VISIBLE
-                    // reveal (previously gone) frame container
-                    main_frame_container.visibility = FrameLayout.VISIBLE
-                    // go to home fragment
-                    supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,HomeFragment()).commit()
-                },1600)
-            },1000)
-        },1500)
-    }
-
-    /**
-     * Go to the home screen w/o showing logo animation
-     */
-    private fun straightHomeNoAnim(){
-        // hide imageView
-        main_logo_for_anim.visibility = FrameLayout.GONE
-        // reveal bottom nav menu
-        main_bottom_navigation.visibility = FrameLayout.VISIBLE
-        // reveal (previously gone) frame container
-        main_frame_container.visibility = FrameLayout.VISIBLE
-        supportFragmentManager.beginTransaction().replace(R.id.main_frame_container, HomeFragment()).commit()
     }
 }
 

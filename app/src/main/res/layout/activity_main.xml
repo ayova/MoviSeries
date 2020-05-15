@@ -8,24 +8,14 @@
     android:gravity="center"
     android:background="@color/colorAccent"
     tools:context=".MainActivity">
-    <ImageView
-        android:id="@+id/main_logo_for_anim"
-        android:src="@drawable/moviseries_rhombus_logo"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:visibility="visible"/>
     <FrameLayout
         android:id="@+id/main_frame_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/main_bottom_navigation"
-        android:layout_marginBottom="0dp"
-        android:visibility="gone"/>
-
+        android:layout_marginBottom="0dp"/>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/main_bottom_navigation"
-        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
