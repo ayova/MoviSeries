@@ -1,13 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.ItemDetails">
+    android:layout_width="match_parent"
+    tools:context=".views.ItemDetailsFragment">
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="10dp">
+    <ImageView
+        android:id="@+id/item_details_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_launcher_background"
+        android:layout_marginVertical="10dp"
+        android:scaleType="fitCenter"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/itemdetails_recycler"
+    <!-- Title -->
+    <TextView
+        android:id="@+id/item_details_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:textSize="20sp"
+        android:text="Title placeholder"/>
 
-</FrameLayout>
+    <!-- Description section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/item_details_description"
+        android:textSize="20sp"
+        android:text="Description"/>
+    <TextView
+        android:id="@+id/item_details_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"
+        android:text="Description placeholder"/>
+
+    <!-- Cast section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:labelFor="@id/item_details_genres"
+        android:textSize="20sp"
+        android:text="Genres"/>
+    <TextView
+        android:id="@+id/item_details_genres"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"
+        android:text="Genres placeholder"/>
+    </LinearLayout>
+</ScrollView>
