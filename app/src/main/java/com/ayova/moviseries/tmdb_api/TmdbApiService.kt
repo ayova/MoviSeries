@@ -1,4 +1,4 @@
-package com.ayova.moviseries.omdb_api
+package com.ayova.moviseries.tmdb_api
 
 import com.ayova.moviseries.models.*
 import retrofit2.Call

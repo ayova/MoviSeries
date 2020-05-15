@@ -1,4 +1,4 @@
-package com.ayova.moviseries.omdb_api
+package com.ayova.moviseries.tmdb_api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

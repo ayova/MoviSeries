@@ -1,5 +1,6 @@
 package com.ayova.moviseries
 
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -29,7 +30,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        startLogoAnimation()
+
+//        startLogoAnimation()
+        straightHomeNoAnim()
+
         main_bottom_navigation.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 /** Home fragment */
@@ -91,6 +95,19 @@ class MainActivity : AppCompatActivity() {
                 },1600)
             },1000)
         },1500)
+    }
+
+    /**
+     * Go to the home screen w/o showing logo animation
+     */
+    private fun straightHomeNoAnim(){
+        // hide imageView
+        main_logo_for_anim.visibility = FrameLayout.GONE
+        // reveal bottom nav menu
+        main_bottom_navigation.visibility = FrameLayout.VISIBLE
+        // reveal (previously gone) frame container
+        main_frame_container.visibility = FrameLayout.VISIBLE
+        supportFragmentManager.beginTransaction().replace(R.id.main_frame_container, HomeFragment()).commit()
     }
 }
 
