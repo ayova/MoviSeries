@@ -8,12 +8,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ayova.moviseries.R
+import com.ayova.moviseries.interfaces.HomeItemClicked
 import com.ayova.moviseries.models.Genre
 import com.ayova.moviseries.models.HomeList
 import com.google.android.material.textview.MaterialTextView
 import kotlinx.android.synthetic.main.home_recycler_item.view.*
 
-class HomeListsRecycler(private val homeLists: ArrayList<HomeList>?, actContext: Context) : RecyclerView.Adapter<HomeListsRecycler.MainViewHolder>() {
+class HomeListsRecycler(private val homeLists: ArrayList<HomeList>?, val actContext: Context) : RecyclerView.Adapter<HomeListsRecycler.MainViewHolder>() {
     private val viewPool = RecyclerView.RecycledViewPool()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
@@ -42,7 +43,8 @@ class HomeListsRecycler(private val homeLists: ArrayList<HomeList>?, actContext:
         return homeLists?.size ?: 0
     }
     inner class MainViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val categoryTitle: MaterialTextView = v.findViewById(R.id.home_recycler_item_category)
+        val categoryTitle: MaterialTextView = itemView.home_recycler_item_category
         val recyclerView: RecyclerView = itemView.home_recycler_item_recycler
+
     }
 }

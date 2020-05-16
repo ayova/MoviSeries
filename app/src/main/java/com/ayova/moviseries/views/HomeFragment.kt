@@ -1,5 +1,6 @@
 package com.ayova.moviseries.views
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.ayova.moviseries.R
 import com.ayova.moviseries.adapters.HomeListsRecycler
+import com.ayova.moviseries.interfaces.HomeItemClicked
 import com.ayova.moviseries.models.*
 import com.ayova.moviseries.tmdb_api.TmdbApi
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -20,7 +22,7 @@ import retrofit2.Response
 /**
  * A simple [Fragment] subclass.
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), HomeItemClicked {
 
     val TAG = "miapp"
     val movieGenres = ArrayList<Genre>()
@@ -70,9 +72,15 @@ class HomeFragment : Fragment() {
 //        findTvShowById()
     }
 
+    /**
+     * Interface for registering movie/tv show clicked on
+     */
+    override fun onHomeItemClick(context: Context, position: Int) {
+        Log.v(TAG, "Item clicked in position: $position")
+    }
 
     /**
-     * Functions underneath
+     * API functions underneath
      */
 
     private fun getMovieGenres() {
@@ -286,4 +294,5 @@ class HomeFragment : Fragment() {
             }
         })
     }
-    }
+
+}

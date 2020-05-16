@@ -63,7 +63,7 @@ interface TmdbApiService {
      * Search for a tv show's details (by id)
      * @param tv_id is the unique identifier for the given tv show
      */
-    @GET("movie/{tv_id}")
+    @GET("tv/{tv_id}")
     fun findTVShowById(@Path("tv_id") tv_id: String, @Query("api_key") apikey: String = TmdbApi.API_KEY, @Query("language") language:
     String = TmdbApi.LANGUAGE): Call<TVShowDetails>
 

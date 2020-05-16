@@ -9,12 +9,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.ayova.moviseries.R
-import com.ayova.moviseries.models.DiscoveredMovie
-import com.ayova.moviseries.models.DiscoveredTV
-import com.ayova.moviseries.models.HomeList
+import com.ayova.moviseries.interfaces.HomeItemClicked
+import com.ayova.moviseries.models.*
 import com.ayova.moviseries.tmdb_api.TmdbApi
+import com.ayova.moviseries.views.ItemDetailsFragment
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.home_movies_shows_recycler.view.*
@@ -39,16 +40,31 @@ class HomeItemsRecycler(private val listOfItems: ArrayList<Any>) : RecyclerView.
             Log.v(TAG, data.toString())
             holder.title.text = data.title
             Picasso.get().load("${TmdbApi.POSTER_URL}${data.poster_path}").into(holder.image)
+            // set click listener - i.e. go to details fragment and search for movie details
+            holder.image.setOnClickListener {
+                holder.activity.supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,
+                    ItemDetailsFragment.newInstance(data.id.toString(), ItemDetailsType.movie.toString()))
+                    .addToBackStack("ItemDetailsFragment").commit()
+            }
         } else if (data is DiscoveredTV) {
             holder.title.text = data.name
             Picasso.get().load("${TmdbApi.POSTER_URL}${data.poster_path}").into(holder.image)
+            // set click listener - i.e. go to details fragment and search for movie details
+            holder.image.setOnClickListener {
+                holder.activity.supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,
+                    ItemDetailsFragment.newInstance(data.id.toString(), ItemDetailsType.tv_show.toString()))
+                    .addToBackStack("ItemDetailsFragment").commit()
+            }
         }
     }
+
     override fun getItemCount(): Int {
         return listOfItems.size
     }
     inner class MainViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val image: ImageView = itemView.home_movies_shows_image
         val title: TextView = itemView.home_movies_shows_title
+        val activity: AppCompatActivity = v.context as AppCompatActivity
+
     }
 }

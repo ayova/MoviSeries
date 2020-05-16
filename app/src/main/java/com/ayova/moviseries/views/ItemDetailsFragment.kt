@@ -59,9 +59,7 @@ class ItemDetailsFragment : Fragment() {
 
     private fun findByType(itemId: String, type: String) {
         when (type) {
-            ItemDetailsType.movie.toString() -> {
-                findMovieById(itemId)
-            }
+            ItemDetailsType.movie.toString() -> findMovieById(itemId)
             ItemDetailsType.tv_show.toString() -> findTvShowById(itemId)
         }
     }
@@ -101,10 +99,21 @@ class ItemDetailsFragment : Fragment() {
         call.enqueue(object : Callback<TVShowDetails> {
             override fun onResponse(call: Call<TVShowDetails>, response: Response<TVShowDetails>) {
                 val body = response.body()
+                Log.v(TAG, body?.overview.toString())
                 if (response.isSuccessful && body != null) {
                     findTvShow = body
                     // Imprimir aqui el listado
                     Log.v(TAG, findTvShow.toString())
+
+                    // Populate fragment
+                    Picasso.get().load("${TmdbApi.POSTER_URL}${findTvShow?.poster_path}").into(item_details_image)
+                    item_details_title.text = findTvShow?.name
+                    item_details_description.text = findTvShow?.overview
+                    var genres = ""
+                    findTvShow?.genres?.forEach { genre ->
+                        genres += "${genre.name} "
+                    }
+                    item_details_genres.text = genres
                 } else {
                     Log.e(TAG, response.errorBody()!!.string())
                 }
