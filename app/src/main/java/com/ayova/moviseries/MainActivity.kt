@@ -2,7 +2,6 @@ package com.ayova.moviseries
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.ayova.moviseries.models.ItemDetailsType
 import com.ayova.moviseries.views.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -20,7 +19,6 @@ class MainActivity : AppCompatActivity() {
 
         setupBottomNavigation()
         supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,HomeFragment()).commit()
-
     }
 
     /**
@@ -36,9 +34,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 /** My lists fragment */
                 R.id.action_myLists -> {
-//                    supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,MyListsFragment()).commit()
-                    supportFragmentManager.beginTransaction().replace(R.id.main_frame_container, ItemDetailsFragment.newInstance("330457",ItemDetailsType.movie.toString())).commit()
-
+                    supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,LibraryFragment()).commit()
                     true
                 }
                 /** Search fragment */

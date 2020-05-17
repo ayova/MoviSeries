@@ -1,12 +1,9 @@
 package com.ayova.moviseries.views
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import com.ayova.moviseries.R
 import kotlinx.android.synthetic.main.fragment_search.*
 
@@ -27,17 +24,10 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-            search_searchview.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    Log.i(TAG, query)
-                    return true
-                }
 
-                override fun onQueryTextChange(newText: String?): Boolean {
-//                    Log.i(TAG, newText)
-                    return true
-                }
-            })
+        search_btn_opensearch.setOnClickListener {
+            startActivity(Intent(activity!!.applicationContext, SearchActivity::class.java))
         }
-
+    }
 }
+

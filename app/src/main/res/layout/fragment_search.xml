@@ -7,16 +7,26 @@
     android:orientation="vertical"
     tools:context=".views.SearchFragment">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_searchview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Search"
+        android:textSize="32sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
         android:textColor="@color/actualWhite"
-        android:background="@color/colorAccentDark"
-        android:text="SEARCH FRAGMENT" />
+        android:layout_marginTop="30dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:id="@+id/search_btn_opensearch"
+        android:text="Movies, TV shows"
+        android:textAllCaps="false"
+        android:textAlignment="center"
+        android:drawableLeft="@drawable/ic_search_white_24dp"
+        android:background="@drawable/search_button_style"/>
 
 </LinearLayout>
