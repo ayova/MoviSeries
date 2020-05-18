@@ -29,4 +29,17 @@
         android:drawableLeft="@drawable/ic_search_white_24dp"
         android:background="@drawable/search_button_style"/>
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_frag_searchview"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        app:queryHint="Movies, tv shows"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_frag_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 </LinearLayout>
