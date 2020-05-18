@@ -1,25 +1,19 @@
 package com.ayova.moviseries.adapters
 
-import android.content.Context
-import android.media.Image
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.ayova.moviseries.R
-import com.ayova.moviseries.interfaces.HomeItemClicked
 import com.ayova.moviseries.models.*
 import com.ayova.moviseries.tmdb_api.TmdbApi
 import com.ayova.moviseries.views.ItemDetailsFragment
 import com.squareup.picasso.Picasso
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.home_movies_shows_recycler.view.*
-import kotlin.coroutines.coroutineContext
 
 /**
  * Recycler for each item inside each list in the Home fragment
@@ -49,7 +43,7 @@ class HomeItemsRecycler(private val listOfItems: ArrayList<Any>) : RecyclerView.
         } else if (data is DiscoveredTV) {
             holder.title.text = data.name
             Picasso.get().load("${TmdbApi.POSTER_URL}${data.poster_path}").into(holder.image)
-            // set click listener - i.e. go to details fragment and search for movie details
+            // set click listener - i.e. go to details fragment and search for tv show details
             holder.image.setOnClickListener {
                 holder.activity.supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,
                     ItemDetailsFragment.newInstance(data.id.toString(), ItemDetailsType.tv_show.toString()))

@@ -1,5 +1,6 @@
 package com.ayova.moviseries.views
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -7,6 +8,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayova.moviseries.R
+import com.ayova.moviseries.SignInActivity
 import com.ayova.moviseries.adapters.HomeListsRecycler
 import com.ayova.moviseries.adapters.SearchResultsRecyclerAdapter
 import com.ayova.moviseries.models.SearchedMovie
@@ -40,6 +42,10 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        search_btn_opensearch.setOnClickListener {
+            startActivity(Intent(activity!!.applicationContext,SignInActivity::class.java))
+        }
 
         // Recycler
         val layoutManager = LinearLayoutManager(activity!!.applicationContext)
