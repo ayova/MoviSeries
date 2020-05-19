@@ -73,16 +73,15 @@ class ItemDetailsFragment : Fragment() {
     private fun setupAddPlaylistBtn(){
         val builder = MaterialAlertDialogBuilder(activity!!)
         builder.setTitle("Añadir a:")
-        Log.v(TAG, allPlaylists[0].listName.toString())
+        allPlaylists.forEach {
+            Log.v(TAG, it.listName!!)
+        }
 
-        val playlists: Array<String> = Array(allPlaylists.size){allPlaylists.forEach { playlist ->
-            playlist.listName
-        }.toString()}
-        Log.v(TAG, playlists.get(0))
+        val playlists: Array<String> = allPlaylists.map { it.listName }.toTypedArray() as Array<String>
 
         var checkedItem = 0
         builder.setSingleChoiceItems(playlists, checkedItem) { dialog, chosenId ->
-            Log.v(TAG, "Chose: $chosenId")
+            Log.v(TAG, "Chose: ${playlists[chosenId]}")
             checkedItem = chosenId
         }
         builder.setPositiveButton("Add") { dialog, which ->
@@ -113,14 +112,12 @@ class ItemDetailsFragment : Fragment() {
             .collection("playlists").get()
             .addOnSuccessListener { result ->
                 allPlaylists.clear()
+                allPlaylists.addAll(result.toObjects(UserPlaylist::class.java))
                 for (document in result) {
                     Log.d(TAG, "Playlist with id: ${document.id} => ${document.data}")
                     val playlist = document.toObject(UserPlaylist::class.java)
-                    var addList = UserPlaylist()
                     playlist.id = document.id
-                    addList.listName = playlist.listName
-                    addList.id = playlist.id
-                    allPlaylists.add(addList)
+                    Log.v("saving:", playlist.toString())
                 }
             }
             .addOnFailureListener { exception ->

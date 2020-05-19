@@ -35,9 +35,6 @@ class HomeItemsRecycler(private val listOfItems: ArrayList<Any>) : RecyclerView.
         val data = listOfItems[position]
         // TODO: set title width = to image width, dynamically
 
-//        holder.title.layoutParams.width = holder.image.layoutParams.width
-//        holder.title.maxWidth = holder.image.width
-//        holder.equalWidth() // defined below in MainViewHolder
         if (data is DiscoveredMovie) {
             Log.v(TAG, data.toString())
             holder.title.text = data.title
