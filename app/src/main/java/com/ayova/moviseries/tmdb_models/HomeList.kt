@@ -1,4 +1,4 @@
-package com.ayova.moviseries.models
+package com.ayova.moviseries.tmdb_models
 
 /**
  * @param name is the name of the list to be displayed

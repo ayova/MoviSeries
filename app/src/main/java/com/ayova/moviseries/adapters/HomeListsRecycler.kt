@@ -1,16 +1,13 @@
 package com.ayova.moviseries.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ayova.moviseries.R
-import com.ayova.moviseries.interfaces.HomeItemClicked
-import com.ayova.moviseries.models.Genre
-import com.ayova.moviseries.models.HomeList
+import com.ayova.moviseries.tmdb_models.HomeList
 import com.google.android.material.textview.MaterialTextView
 import kotlinx.android.synthetic.main.home_recycler_item.view.*
 

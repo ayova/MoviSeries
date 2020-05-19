@@ -1,22 +1,19 @@
 package com.ayova.moviseries.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.ayova.moviseries.R
-import com.ayova.moviseries.models.ItemDetails
-import com.ayova.moviseries.models.ItemDetailsType
-import com.ayova.moviseries.models.SearchedMovie
-import com.ayova.moviseries.models.SearchedTV
+import com.ayova.moviseries.tmdb_models.ItemDetailsType
+import com.ayova.moviseries.tmdb_models.SearchedMovie
+import com.ayova.moviseries.tmdb_models.SearchedTV
 import com.ayova.moviseries.tmdb_api.TmdbApi
 import com.ayova.moviseries.views.ItemDetailsFragment
 import com.squareup.picasso.Picasso

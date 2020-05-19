@@ -9,12 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayova.moviseries.R
 import com.ayova.moviseries.SignInActivity
-import com.ayova.moviseries.adapters.HomeListsRecycler
 import com.ayova.moviseries.adapters.SearchResultsRecyclerAdapter
-import com.ayova.moviseries.models.SearchedMovie
-import com.ayova.moviseries.models.SearchedMovies
-import com.ayova.moviseries.models.SearchedTV
-import com.ayova.moviseries.models.SearchedTVs
+import com.ayova.moviseries.tmdb_models.SearchedMovie
+import com.ayova.moviseries.tmdb_models.SearchedMovies
+import com.ayova.moviseries.tmdb_models.SearchedTV
+import com.ayova.moviseries.tmdb_models.SearchedTVs
 import com.ayova.moviseries.tmdb_api.TmdbApi
 import kotlinx.android.synthetic.main.fragment_search.*
 import retrofit2.Call

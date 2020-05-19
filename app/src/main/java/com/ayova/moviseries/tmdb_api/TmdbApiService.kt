@@ -1,6 +1,6 @@
 package com.ayova.moviseries.tmdb_api
 
-import com.ayova.moviseries.models.*
+import com.ayova.moviseries.tmdb_models.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

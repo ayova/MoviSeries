@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ayova.moviseries.R
 import com.ayova.moviseries.adapters.HomeListsRecycler
 import com.ayova.moviseries.interfaces.HomeItemClicked
-import com.ayova.moviseries.models.*
+import com.ayova.moviseries.tmdb_models.*
 import com.ayova.moviseries.tmdb_api.TmdbApi
 import kotlinx.android.synthetic.main.fragment_home.*
 import retrofit2.Call

@@ -7,8 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.ayova.moviseries.R
-import com.ayova.moviseries.models.*
+import com.ayova.moviseries.firebase_models.UserPlaylist
+import com.ayova.moviseries.tmdb_models.*
 import com.ayova.moviseries.tmdb_api.TmdbApi
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_item_details.*
 import retrofit2.Call
@@ -23,6 +27,11 @@ class ItemDetailsFragment : Fragment() {
     private var findMovie: MovieDetails? = null
     private var findTvShow: TVShowDetails? = null
     private val TAG = "miappdets"
+
+    val db = FirebaseFirestore.getInstance()
+    var auth = FirebaseAuth.getInstance()
+    var userPlaylist = UserPlaylist()
+    var allPlaylists = arrayListOf<UserPlaylist>()
 
     companion object{
         private const val ITEM_ID = "itemDetailsID"
@@ -54,7 +63,69 @@ class ItemDetailsFragment : Fragment() {
         val itemType = bundle?.getString(ITEM_TYPE).toString()
 
         findByType(itemId, itemType)
+        getUserPlaylists()
+        item_details_playlistadd.setOnClickListener{
+            setupAddPlaylistBtn()
+        }
 
+    }
+
+    private fun setupAddPlaylistBtn(){
+        val builder = MaterialAlertDialogBuilder(activity!!)
+        builder.setTitle("Añadir a:")
+        Log.v(TAG, allPlaylists[0].listName.toString())
+
+        val playlists: Array<String> = Array(allPlaylists.size){allPlaylists.forEach { playlist ->
+            playlist.listName
+        }.toString()}
+        Log.v(TAG, playlists.get(0))
+
+        var checkedItem = 0
+        builder.setSingleChoiceItems(playlists, checkedItem) { dialog, chosenId ->
+            Log.v(TAG, "Chose: $chosenId")
+            checkedItem = chosenId
+        }
+        builder.setPositiveButton("Add") { dialog, which ->
+            Log.v(TAG, "In the end chose: ${playlists[checkedItem]}")
+
+//            userPlaylist.listName = allPlaylists[checkedItem].id
+
+        }
+        builder.setNegativeButton("Cancel", null)
+        builder.show()
+    }
+
+//    fun addToPlaylist(id: String) {
+//        userPlaylist.listName = taskName.text.toString()
+//
+//        db.collection("users").document(id).collection("tasks").add(newTask)
+//            .addOnSuccessListener {
+//                finish()
+//            }
+//            .addOnFailureListener { e ->
+//                Log.w(TAG, "Error writing document", e)
+//            }
+//    }
+
+    private fun getUserPlaylists() {
+        db.collection("users")
+            .document(auth.currentUser?.uid.toString())
+            .collection("playlists").get()
+            .addOnSuccessListener { result ->
+                allPlaylists.clear()
+                for (document in result) {
+                    Log.d(TAG, "Playlist with id: ${document.id} => ${document.data}")
+                    val playlist = document.toObject(UserPlaylist::class.java)
+                    var addList = UserPlaylist()
+                    playlist.id = document.id
+                    addList.listName = playlist.listName
+                    addList.id = playlist.id
+                    allPlaylists.add(addList)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Error getting documents: ", exception)
+            }
     }
 
     private fun findByType(itemId: String, type: String) {

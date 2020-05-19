@@ -1,4 +1,4 @@
-package com.ayova.moviseries.models
+package com.ayova.moviseries.tmdb_models
 
 data class ProductionCountry(
     val iso_3166_1: String,

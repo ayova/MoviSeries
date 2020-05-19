@@ -5,16 +5,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.ayova.moviseries.firebase_models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {
 
     private val TAG = "miappSignUp"
-    lateinit var auth: FirebaseAuth
+    var auth: FirebaseAuth = FirebaseAuth.getInstance()
+    val db = FirebaseFirestore.getInstance()
     private var userEmail = ""
     private var userPass = ""
 
@@ -26,7 +29,10 @@ class SignUpActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         // button listener for signing in instead
-        sign_up_btn_signin.setOnClickListener { startActivity(Intent(this, SignInActivity::class.java)) }
+        sign_up_btn_signin.setOnClickListener {
+            startActivity(Intent(this, SignInActivity::class.java))
+            this.finish()
+        }
 
         // create user when sign up button clicked and credentials entered
         sign_up_btn_signup.setOnClickListener {
@@ -47,8 +53,14 @@ class SignUpActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    updateUI(user)
+                    var user = User()
+                    user.email = email
+                    user.id = auth.currentUser?.uid
+                    db.collection("users").document(user.id.toString()).set(user).addOnSuccessListener { documentReference ->
+                        updateUI(user)
+                    }.addOnFailureListener { e ->
+                        Log.w(TAG, "Error adding document", e)
+                    }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
@@ -59,7 +71,7 @@ class SignUpActivity : AppCompatActivity() {
             }
     }
 
-    private fun updateUI(userSignedUp: FirebaseUser?) {
+    private fun updateUI(userSignedUp: User?) {
         if (userSignedUp != null) {
             startActivity(Intent(this, MainActivity::class.java))
             this.finish()

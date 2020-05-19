@@ -1,4 +1,4 @@
-package com.ayova.moviseries.models
+package com.ayova.moviseries.tmdb_models
 
 data class SpokenLanguage(
     val iso_639_1: String,

@@ -28,7 +28,10 @@ class SignInActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         // button listener for sign up instead
-        sign_in_btn_signup.setOnClickListener { startActivity(Intent(this, SignUpActivity::class.java)) }
+        sign_in_btn_signup.setOnClickListener {
+            startActivity(Intent(this, SignUpActivity::class.java))
+            this.finish()
+        }
 
         // create user when sign up button clicked and credentials entered
         sign_in_btn_signin.setOnClickListener {
