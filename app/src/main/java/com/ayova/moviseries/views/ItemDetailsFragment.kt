@@ -5,13 +5,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.ayova.moviseries.R
+import com.ayova.moviseries.firebase_models.User
 import com.ayova.moviseries.firebase_models.UserPlaylist
 import com.ayova.moviseries.tmdb_models.*
 import com.ayova.moviseries.tmdb_api.TmdbApi
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_item_details.*
@@ -65,64 +72,116 @@ class ItemDetailsFragment : Fragment() {
         findByType(itemId, itemType)
         getUserPlaylists()
         item_details_playlistadd.setOnClickListener{
-            setupAddPlaylistBtn()
+            setupAddPlaylistBtn(itemId, itemType)
         }
+
+        Log.v(TAG, "itemtype: $itemType, itemfromdetails: ${ItemDetailsType.movie.toString()}")
 
     }
 
-    private fun setupAddPlaylistBtn(){
+    private fun setupAddPlaylistBtn(item: String, type: String){
         val builder = MaterialAlertDialogBuilder(activity!!)
-        builder.setTitle("Añadir a:")
+        val inflater = layoutInflater
+        builder.setTitle("Add to:")
+
+        // log of playlists
         allPlaylists.forEach {
             Log.v(TAG, it.listName!!)
         }
+        val dialogLayout = inflater.inflate(R.layout.alert_dialog_add_playlist, null)
+        val editTextName = dialogLayout.findViewById<TextInputEditText>(R.id.alert_add_playlist_name)
 
+        // array for setting singleChoiceItems
         val playlists: Array<String> = allPlaylists.map { it.listName }.toTypedArray() as Array<String>
-
         var checkedItem = 0
         builder.setSingleChoiceItems(playlists, checkedItem) { dialog, chosenId ->
             Log.v(TAG, "Chose: ${playlists[chosenId]}")
             checkedItem = chosenId
         }
         builder.setPositiveButton("Add") { dialog, which ->
-            Log.v(TAG, "In the end chose: ${playlists[checkedItem]}")
-
+            if (editTextName.text.toString().isNullOrBlank()) {
+                Log.v(TAG, "In the end chose: ${playlists[checkedItem]}")
+                addToPlaylist(item, type, editTextName.text.toString())
+            } else if (editTextName.text.toString().isNotEmpty()) {
+                Log.v(TAG, "In the end chose: ${editTextName.text.toString()}")
+                if (!playlists.contains(editTextName.text.toString())) {
+                    createUserPlaylist(item, type, editTextName.text.toString())
+                } else {
+                    addToPlaylist(item, type, editTextName.text.toString())
+                    Toast.makeText(activity!!, "Playlist already exists", Toast.LENGTH_SHORT).show()
+                }
+            }
 //            userPlaylist.listName = allPlaylists[checkedItem].id
 
         }
         builder.setNegativeButton("Cancel", null)
+        builder.setView(dialogLayout)
         builder.show()
     }
 
-//    fun addToPlaylist(id: String) {
-//        userPlaylist.listName = taskName.text.toString()
-//
-//        db.collection("users").document(id).collection("tasks").add(newTask)
-//            .addOnSuccessListener {
-//                finish()
-//            }
-//            .addOnFailureListener { e ->
-//                Log.w(TAG, "Error writing document", e)
-//            }
-//    }
+    private fun addToPlaylist(itemId: String, itemType: String, playlistName: String) {
+        Log.e(TAG, "got to addToPlaylist()")
+        val playlistsRef = db.collection("users").document(auth.currentUser!!.uid).collection("playlists")
+
+        playlistsRef.get().addOnSuccessListener { playlists ->
+            for (playlist in playlists) {
+                if (itemType == ItemDetailsType.movie.toString()) {
+                    playlistsRef.document(playlist.id).update("moviesAdded", FieldValue.arrayUnion(itemId))
+                } else if (itemType == ItemDetailsType.tv_show.toString()) {
+                    playlistsRef.document(playlist.id).update("tvShowsAdded", FieldValue.arrayUnion(itemId))
+                }
+            }
+        }
+    }
+
+    private fun createUserPlaylist(itemId: String, itemType: String, playlistName: String) {
+        val playlistToBeAdded = UserPlaylist()
+        playlistToBeAdded.listName = playlistName
+        db.collection("users").document(auth.currentUser!!.uid).collection("playlists").add(playlistToBeAdded)
+            .addOnSuccessListener {
+                Log.v(TAG, "Playlist added with id: ${it.id}")
+                addToPlaylist(itemId, itemType, playlistName)
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error writing document", e)
+            }
+        addToPlaylist(itemId, itemType, playlistName)
+    }
 
     private fun getUserPlaylists() {
         db.collection("users")
             .document(auth.currentUser?.uid.toString())
-            .collection("playlists").get()
+            .collection("playlists").addSnapshotListener{ snapshot, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    allPlaylists.clear()
+                    allPlaylists.addAll(snapshot.toObjects(UserPlaylist::class.java))
+                } else {
+                    Log.d(TAG, "Current data: null")
+                }
+            }
+
+        /**
+         * Using snapshotListener is better as it updates while in the
+         * same ItemDetailsFragment, ie. without leaving the film
+         *
+            .get()
             .addOnSuccessListener { result ->
                 allPlaylists.clear()
                 allPlaylists.addAll(result.toObjects(UserPlaylist::class.java))
                 for (document in result) {
                     Log.d(TAG, "Playlist with id: ${document.id} => ${document.data}")
                     val playlist = document.toObject(UserPlaylist::class.java)
-                    playlist.id = document.id
                     Log.v("saving:", playlist.toString())
                 }
             }
             .addOnFailureListener { exception ->
                 Log.d(TAG, "Error getting documents: ", exception)
-            }
+            } */
     }
 
     private fun findByType(itemId: String, type: String) {
@@ -139,8 +198,6 @@ class ItemDetailsFragment : Fragment() {
                 val body = response.body()
                 if (response.isSuccessful && body != null) {
                     findMovie = body
-                    // Imprimir aqui el listado
-                    // Log.v(TAG, findMovie.toString())
 
                     // Populate fragment
                     Picasso.get().load("${TmdbApi.POSTER_URL}${findMovie?.poster_path}").into(item_details_image)
@@ -170,8 +227,6 @@ class ItemDetailsFragment : Fragment() {
                 Log.v(TAG, body?.overview.toString())
                 if (response.isSuccessful && body != null) {
                     findTvShow = body
-                    // Imprimir aqui el listado
-                    Log.v(TAG, findTvShow.toString())
 
                     // Populate fragment
                     Picasso.get().load("${TmdbApi.POSTER_URL}${findTvShow?.poster_path}").into(item_details_image)

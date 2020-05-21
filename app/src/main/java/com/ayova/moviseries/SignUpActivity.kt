@@ -56,11 +56,13 @@ class SignUpActivity : AppCompatActivity() {
                     var user = User()
                     user.email = email
                     user.id = auth.currentUser?.uid
-                    db.collection("users").document(user.id.toString()).set(user).addOnSuccessListener { documentReference ->
+                    db.collection("users").document(user.id.toString()).set(user)
+                        .addOnSuccessListener { documentReference ->
                         updateUI(user)
-                    }.addOnFailureListener { e ->
+                        }
+                        .addOnFailureListener { e ->
                         Log.w(TAG, "Error adding document", e)
-                    }
+                        }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
