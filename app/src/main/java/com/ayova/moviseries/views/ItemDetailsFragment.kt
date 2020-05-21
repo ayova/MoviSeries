@@ -38,14 +38,16 @@ class ItemDetailsFragment : Fragment() {
     val db = FirebaseFirestore.getInstance()
     var auth = FirebaseAuth.getInstance()
     var userPlaylist = UserPlaylist()
-    var allPlaylists = arrayListOf<UserPlaylist>()
+    var allPlaylists = arrayListOf<String>()
+    var movieImage: String? = null
+    var tvImage: String? = null
 
     companion object{
         private const val ITEM_ID = "itemDetailsID"
         private const val ITEM_TYPE = "itemDetailsType"
 
         fun newInstance(id: String, type: String):ItemDetailsFragment{
-            val args: Bundle = Bundle()
+            val args = Bundle()
             args.putString(ITEM_ID, id)
             args.putString(ITEM_TYPE, type)
             val fragment = ItemDetailsFragment()
@@ -85,14 +87,14 @@ class ItemDetailsFragment : Fragment() {
         builder.setTitle("Add to:")
 
         // log of playlists
-        allPlaylists.forEach {
-            Log.v(TAG, it.listName!!)
-        }
+//        allPlaylists.forEach {
+//            Log.v(TAG, it.listName!!)
+//        }
         val dialogLayout = inflater.inflate(R.layout.alert_dialog_add_playlist, null)
         val editTextName = dialogLayout.findViewById<TextInputEditText>(R.id.alert_add_playlist_name)
 
         // array for setting singleChoiceItems
-        val playlists: Array<String> = allPlaylists.map { it.listName }.toTypedArray() as Array<String>
+        val playlists: Array<String> = allPlaylists.map { it }.toTypedArray() as Array<String>
         var checkedItem = 0
         builder.setSingleChoiceItems(playlists, checkedItem) { dialog, chosenId ->
             Log.v(TAG, "Chose: ${playlists[chosenId]}")
@@ -101,13 +103,28 @@ class ItemDetailsFragment : Fragment() {
         builder.setPositiveButton("Add") { dialog, which ->
             if (editTextName.text.toString().isNullOrBlank()) {
                 Log.v(TAG, "In the end chose: ${playlists[checkedItem]}")
-                addToPlaylist(item, type, editTextName.text.toString())
+                if (type == ItemDetailsType.movie.toString()) {
+                    addToPlaylist(item, type, movieImage!!, editTextName.text.toString())
+                }
+                if (type == ItemDetailsType.tv_show.toString()) {
+                    addToPlaylist(item, type, tvImage!!, editTextName.text.toString())
+                }
             } else if (editTextName.text.toString().isNotEmpty()) {
                 Log.v(TAG, "In the end chose: ${editTextName.text.toString()}")
                 if (!playlists.contains(editTextName.text.toString())) {
-                    createUserPlaylist(item, type, editTextName.text.toString())
+                    if (type == ItemDetailsType.movie.toString()) {
+                        createUserPlaylist(item, type, editTextName.text.toString())
+                    }
+                    if (type == ItemDetailsType.tv_show.toString()) {
+                        createUserPlaylist(item, type, editTextName.text.toString())
+                    }
                 } else {
-                    addToPlaylist(item, type, editTextName.text.toString())
+                    if (type == ItemDetailsType.movie.toString()) {
+                        addToPlaylist(item, type, movieImage!!, editTextName.text.toString())
+                    }
+                    if (type == ItemDetailsType.tv_show.toString()) {
+                        addToPlaylist(item, type, tvImage!!, editTextName.text.toString())
+                    }
                     Toast.makeText(activity!!, "Playlist already exists", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -119,16 +136,16 @@ class ItemDetailsFragment : Fragment() {
         builder.show()
     }
 
-    private fun addToPlaylist(itemId: String, itemType: String, playlistName: String) {
+    private fun addToPlaylist(itemId: String, itemType: String, image: String, playlistName: String) {
         Log.e(TAG, "got to addToPlaylist()")
         val playlistsRef = db.collection("users").document(auth.currentUser!!.uid).collection("playlists")
 
         playlistsRef.get().addOnSuccessListener { playlists ->
             for (playlist in playlists) {
                 if (itemType == ItemDetailsType.movie.toString()) {
-                    playlistsRef.document(playlist.id).update("moviesAdded", FieldValue.arrayUnion(itemId))
+                    playlistsRef.document(playlist.id).update("moviesAdded", FieldValue.arrayUnion(mapOf("id" to itemId, "image" to image)))
                 } else if (itemType == ItemDetailsType.tv_show.toString()) {
-                    playlistsRef.document(playlist.id).update("tvShowsAdded", FieldValue.arrayUnion(itemId))
+                    playlistsRef.document(playlist.id).update("tvShowsAdded", FieldValue.arrayUnion(mapOf("id" to itemId, "image" to image)))
                 }
             }
         }
@@ -140,30 +157,44 @@ class ItemDetailsFragment : Fragment() {
         db.collection("users").document(auth.currentUser!!.uid).collection("playlists").add(playlistToBeAdded)
             .addOnSuccessListener {
                 Log.v(TAG, "Playlist added with id: ${it.id}")
-                addToPlaylist(itemId, itemType, playlistName)
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error writing document", e)
             }
-        addToPlaylist(itemId, itemType, playlistName)
+        if (itemType == ItemDetailsType.movie.toString()) {
+            addToPlaylist(itemId, itemType, movieImage!!, playlistName)
+        }
+        if (itemType == ItemDetailsType.tv_show.toString()) {
+            addToPlaylist(itemId, itemType, tvImage!!, playlistName)
+        }
     }
 
     private fun getUserPlaylists() {
         db.collection("users")
             .document(auth.currentUser?.uid.toString())
-            .collection("playlists").addSnapshotListener{ snapshot, e ->
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null) {
-                    allPlaylists.clear()
-                    allPlaylists.addAll(snapshot.toObjects(UserPlaylist::class.java))
-                } else {
-                    Log.d(TAG, "Current data: null")
+            .collection("playlists").get().addOnSuccessListener { querySnapshot ->
+                allPlaylists.clear()
+                for (document in querySnapshot) {
+                    Log.v(TAG,document["listName"].toString())
+                    allPlaylists.add(document["listName"].toString())
                 }
             }
+//        addSnapshotListener{ snapshot, e ->
+//                if (e != null) {
+//                    Log.w(TAG, "Listen failed.", e)
+//                    return@addSnapshotListener
+//                }
+//
+//                if (snapshot != null) {
+//                    allPlaylists.clear()
+//                    snapshot.forEach { res ->
+//                        Log.v(TAG, res.toString())
+//                    }
+//                    allPlaylists.addAll(snapshot.toObjects(UserPlaylist::class.java))
+//                } else {
+//                    Log.d(TAG, "Current data: null")
+//                }
+//            }
 
         /**
          * Using snapshotListener is better as it updates while in the
@@ -201,6 +232,7 @@ class ItemDetailsFragment : Fragment() {
 
                     // Populate fragment
                     Picasso.get().load("${TmdbApi.POSTER_URL}${findMovie?.poster_path}").into(item_details_image)
+                    movieImage = "${TmdbApi.POSTER_URL}${findMovie?.poster_path}"
                     item_details_title.text = findMovie?.title
                     item_details_description.text = findMovie?.overview
                     var genres = ""
@@ -230,6 +262,7 @@ class ItemDetailsFragment : Fragment() {
 
                     // Populate fragment
                     Picasso.get().load("${TmdbApi.POSTER_URL}${findTvShow?.poster_path}").into(item_details_image)
+                    tvImage = "${TmdbApi.POSTER_URL}${findTvShow?.poster_path}"
                     item_details_title.text = findTvShow?.name
                     item_details_description.text = findTvShow?.overview
                     var genres = ""
