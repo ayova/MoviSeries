@@ -24,7 +24,7 @@ class LibraryFragmentAdapter(playlist: FirestoreRecyclerOptions<UserPlaylist>) :
         holder.playlistTitle.text = model.listName
         holder.itemView.setOnClickListener {
             holder.activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.main_frame_container, UserPlaylistFragment.newInstance("8Z494VHBzwpuIL6XsdiU"))
+                .replace(R.id.main_frame_container, UserPlaylistFragment.newInstance(model.id.toString()))
                 .addToBackStack("LibraryFragment").commit()
         }
     }

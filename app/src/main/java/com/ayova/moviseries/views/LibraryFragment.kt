@@ -67,13 +67,6 @@ class LibraryFragment : Fragment() {
             .setQuery(query, UserPlaylist::class.java)
             .build()
 
-        var listWithId: Map<String, String> = mapOf()
-        playlistsRef.get().addOnSuccessListener { querySnapshot ->
-            for (document in querySnapshot) {
-                Log.v("miappIds",document.id)
-
-            }
-        }
         adapter = LibraryFragmentAdapter(playlists)
         library_lists_recycler.setHasFixedSize(true)
         library_lists_recycler.layoutManager = LinearLayoutManager(activity!!)
