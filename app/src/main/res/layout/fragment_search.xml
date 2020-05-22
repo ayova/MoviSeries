@@ -17,23 +17,23 @@
         android:textColor="@color/actualWhite"
         android:layout_marginTop="30dp"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
-        android:layout_marginHorizontal="20dp"
-        android:id="@+id/search_btn_opensearch"
-        android:text="Movies, TV shows"
-        android:textAllCaps="false"
-        android:textAlignment="center"
-        android:drawableLeft="@drawable/ic_search_white_24dp"
-        android:background="@drawable/search_button_style"/>
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginVertical="20dp"-->
+<!--        android:layout_marginHorizontal="20dp"-->
+<!--        android:id="@+id/search_btn_opensearch"-->
+<!--        android:text="Movies, TV shows"-->
+<!--        android:textAllCaps="false"-->
+<!--        android:textAlignment="center"-->
+<!--        android:drawableLeft="@drawable/ic_search_white_24dp"-->
+<!--        android:background="@drawable/search_button_style"/>-->
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_frag_searchview"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="20dp"
-        app:queryHint="Movies, tv shows"
+        app:queryHint="Movies and tv shows"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

@@ -41,10 +41,15 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        search_btn_opensearch.setOnClickListener {
-            startActivity(Intent(activity!!.applicationContext,SignInActivity::class.java))
-        }
+//        search_btn_opensearch.visibility = View.VISIBLE
+//        search_frag_searchview.visibility = View.GONE
+//        search_btn_opensearch.setOnClickListener {
+//            search_btn_opensearch.visibility = View.GONE
+//            search_frag_searchview.visibility = View.VISIBLE
+//            search_frag_searchview.queryHint = "Movies and TV shows"
+//            search_frag_searchview.isActivated = true
+//            search_frag_searchview.requestFocus()
+//        }
 
         // Recycler
         val layoutManager = LinearLayoutManager(activity!!.applicationContext)

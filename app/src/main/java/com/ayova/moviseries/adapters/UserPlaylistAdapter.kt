@@ -42,16 +42,6 @@ class UserPlaylistAdapter(private val playlist: UserPlaylist?) : RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-//        val data = playlist?.moviesAdded?.get(position)
-////        Log.e("miapprv", "${playlist?.tvShowsAdded?.toString()}")
-//        Picasso.get().load(data?.get("image")).into(holder.poster)
-//        holder.poster.setOnClickListener {
-//            Log.v("miappclick", "poster")
-//            holder.activity.supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,
-//                ItemDetailsFragment.newInstance(data?.getValue("id").toString(), ItemDetailsType.movie.toString()))
-//                .addToBackStack("UserPlaylist").commit()
-//        }
-
         val data = items[position]
         Picasso.get().load(data["image"]).into(holder.poster)
         holder.poster.setOnClickListener {
