@@ -5,6 +5,9 @@
 
     <ImageView
         android:id="@+id/playlist_details_poster"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:src="@drawable/ic_launcher_background"
+        android:scaleType="fitCenter"
+        android:layout_margin="10dp"
+        android:layout_width="150dp"
+        android:layout_height="170dp"/>
 </LinearLayout>
