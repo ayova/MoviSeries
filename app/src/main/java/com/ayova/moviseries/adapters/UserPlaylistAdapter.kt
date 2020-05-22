@@ -46,7 +46,7 @@ class UserPlaylistAdapter(private val playlist: UserPlaylist?) : RecyclerView.Ad
         Picasso.get().load(data["image"]).into(holder.poster)
         holder.poster.setOnClickListener {
             holder.activity.supportFragmentManager.beginTransaction()
-                .replace(R.id.main_frame_container, ItemDetailsFragment.newInstance(data["it"].toString(),data["type"].toString()))
+                .replace(R.id.main_frame_container, ItemDetailsFragment.newInstance(data["id"].toString(),data["type"].toString()))
                 .addToBackStack("UserPlaylist").commit()
         }
     }
