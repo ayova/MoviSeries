@@ -20,6 +20,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_item_details.*
 import retrofit2.Call
@@ -143,11 +144,15 @@ class ItemDetailsFragment : Fragment() {
     }
 
     private fun createUserPlaylist(itemId: String, itemType: String, playlistName: String) {
+        var createdWithId: String = ""
         val playlistToBeAdded = UserPlaylist()
         playlistToBeAdded.listName = playlistName
         db.collection("users").document(auth.currentUser!!.uid).collection("playlists").add(playlistToBeAdded)
             .addOnSuccessListener {
                 Log.v(TAG, "Playlist added with id: ${it.id}")
+                createdWithId = it.id
+                db.collection("users").document(auth.currentUser!!.uid).collection("playlists").document(createdWithId)
+                    .set(mapOf("id" to createdWithId), SetOptions.merge())
                 if (itemType == ItemDetailsType.movie.toString()) {
                     addToPlaylist(itemId, itemType, movieImage!!, playlistName)
                 }

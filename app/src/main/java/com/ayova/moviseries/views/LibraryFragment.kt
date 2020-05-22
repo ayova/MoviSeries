@@ -1,6 +1,7 @@
 package com.ayova.moviseries.views
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,11 +61,19 @@ class LibraryFragment : Fragment() {
         }
     }
 
-    fun setupRecyclerView() {
+    private fun setupRecyclerView() {
         var query: Query = playlistsRef.orderBy("listName")
         var playlists = FirestoreRecyclerOptions.Builder<UserPlaylist>()
             .setQuery(query, UserPlaylist::class.java)
             .build()
+
+        var listWithId: Map<String, String> = mapOf()
+        playlistsRef.get().addOnSuccessListener { querySnapshot ->
+            for (document in querySnapshot) {
+                Log.v("miappIds",document.id)
+
+            }
+        }
         adapter = LibraryFragmentAdapter(playlists)
         library_lists_recycler.setHasFixedSize(true)
         library_lists_recycler.layoutManager = LinearLayoutManager(activity!!)
