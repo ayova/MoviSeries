@@ -30,7 +30,7 @@ class UserPlaylistFragment : Fragment() {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private val playlistsRef = db.collection("users").document(auth.currentUser!!.uid).collection("playlists")
-    var tappedPlaylist: UserPlaylist? = null
+    private var tappedPlaylist: UserPlaylist? = null
 
     companion object{
         private const val PLAYLIST_ID = "playlistID"
@@ -56,33 +56,32 @@ class UserPlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val bundle = this.arguments
         val playlistId = bundle?.getString(PLAYLIST_ID).toString()
-        Log.v("miapp", playlistId)
-        adapter = UserPlaylistAdapter(tappedPlaylist)
-        user_playlist_recycler.setHasFixedSize(true)
-        user_playlist_recycler.layoutManager = LinearLayoutManager(activity!!)
-        user_playlist_recycler.adapter = adapter
+//        adapter = UserPlaylistAdapter(tappedPlaylist)
+//        user_playlist_recycler.layoutManager = GridLayoutManager(activity!!, 2)
+//        user_playlist_recycler.setHasFixedSize(true)
+//        user_playlist_recycler.adapter = adapter
+//        setupRecyclerView()
         getPlaylist(playlistId)
-        adapter?.notifyDataSetChanged()
     }
 
-    private fun getPlaylist(playlist: String): UserPlaylist {
-        var tappedPlaylist = UserPlaylist()
+    private fun getPlaylist(playlist: String) {
+        var mPlaylist: UserPlaylist = UserPlaylist()
         playlistsRef.document(playlist).get()
-            .addOnSuccessListener { snapshot ->
-                tappedPlaylist = snapshot.toObject(UserPlaylist::class.java)!!
-
-                adapter?.notifyDataSetChanged()
+            .addOnSuccessListener { plist ->
+                Log.v("miapp", plist.toObject(UserPlaylist::class.java)?.moviesAdded.toString())
+                mPlaylist.listName = plist.toObject(UserPlaylist::class.java)?.listName.toString()
+                mPlaylist.moviesAdded = plist.toObject(UserPlaylist::class.java)?.moviesAdded
+                mPlaylist.tvShowsAdded = plist.toObject(UserPlaylist::class.java)?.tvShowsAdded
+                setupRecyclerView(mPlaylist)
             }
             .addOnFailureListener { e ->
                 Log.e("Couldn't get items in playlist", "<-- ERROR", e ) }
-        adapter?.notifyDataSetChanged()
-        return tappedPlaylist
     }
 
     private fun setupRecyclerView(playlist: UserPlaylist) {
         adapter = UserPlaylistAdapter(playlist)
         user_playlist_recycler.setHasFixedSize(true)
-        user_playlist_recycler.layoutManager = GridLayoutManager(activity!!, 3)
+        user_playlist_recycler.layoutManager = GridLayoutManager(activity!!, 2)
         user_playlist_recycler.adapter = adapter
     }
 

@@ -5,9 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.ayova.moviseries.R
 import com.ayova.moviseries.firebase_models.UserPlaylist
+import com.ayova.moviseries.views.UserPlaylistFragment
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.android.material.textview.MaterialTextView
 import com.squareup.picasso.Picasso
 
 class UserPlaylistAdapter(private val playlist: UserPlaylist?) : RecyclerView.Adapter<UserPlaylistAdapter.MainViewHolder>() {
@@ -19,12 +24,13 @@ class UserPlaylistAdapter(private val playlist: UserPlaylist?) : RecyclerView.Ad
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        Log.e("miapprv", "${playlist?.tvShowsAdded?.toString()}")
-        Picasso.get().load("${playlist?.tvShowsAdded?.toString()}").into(holder.poster)
+        val data = playlist?.moviesAdded?.get(position)?.get("image")
+//        Log.e("miapprv", "${playlist?.tvShowsAdded?.toString()}")
+        Picasso.get().load(data).into(holder.poster)
     }
 
     override fun getItemCount(): Int {
-        return 1
+        return playlist?.moviesAdded?.size ?: 0
     }
 
     inner class MainViewHolder(v: View) : RecyclerView.ViewHolder(v) {
