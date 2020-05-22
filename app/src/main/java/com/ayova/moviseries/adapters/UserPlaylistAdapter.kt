@@ -23,25 +23,53 @@ class UserPlaylistAdapter(private val playlist: UserPlaylist?) : RecyclerView.Ad
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.playlist_details_item, parent, false)
-//        items
-        Log.v("miappRv", playlist?.listName.toString())
+        items.clear()
+        if (playlist?.moviesAdded != null) {
+//            items.addAll(playlist?.moviesAdded as ArrayList<Map<String, String>>)
+            for (movie in playlist.moviesAdded!!) {
+                items.add(mapOf("id" to movie["id"]!!, "image" to movie.get("image")!!, "type" to ItemDetailsType.movie.toString()))
+            }
+        }
+        if (playlist?.tvShowsAdded != null) {
+//            items.addAll(playlist?.tvShowsAdded as ArrayList<Map<String, String>>)
+            for (tv in playlist.tvShowsAdded!!) {
+                items.add(mapOf("id" to tv["id"]!!, "image" to tv.get("image")!!, "type" to ItemDetailsType.tv_show.toString()))
+            }
+        }
+        Log.v("miappRv", items.size.toString())
+        Log.v("miappRv", items.toString())
         return MainViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        val data = playlist?.moviesAdded?.get(position)
-//        Log.e("miapprv", "${playlist?.tvShowsAdded?.toString()}")
-        Picasso.get().load(data?.get("image")).into(holder.poster)
+//        val data = playlist?.moviesAdded?.get(position)
+////        Log.e("miapprv", "${playlist?.tvShowsAdded?.toString()}")
+//        Picasso.get().load(data?.get("image")).into(holder.poster)
+//        holder.poster.setOnClickListener {
+//            Log.v("miappclick", "poster")
+//            holder.activity.supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,
+//                ItemDetailsFragment.newInstance(data?.getValue("id").toString(), ItemDetailsType.movie.toString()))
+//                .addToBackStack("UserPlaylist").commit()
+//        }
+
+        val data = items[position]
+        Picasso.get().load(data["image"]).into(holder.poster)
         holder.poster.setOnClickListener {
-            Log.v("miappclick", "poster")
-            holder.activity.supportFragmentManager.beginTransaction().replace(R.id.main_frame_container,
-                ItemDetailsFragment.newInstance(data?.getValue("id").toString(), ItemDetailsType.movie.toString()))
+            holder.activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.main_frame_container, ItemDetailsFragment.newInstance(data["it"].toString(),data["type"].toString()))
                 .addToBackStack("UserPlaylist").commit()
         }
     }
 
     override fun getItemCount(): Int {
-        return playlist?.moviesAdded?.size ?: 0
+        var total = 0
+        if (playlist?.moviesAdded?.size != null){
+            total += playlist?.moviesAdded?.size!!
+        }
+        if (playlist?.tvShowsAdded?.size != null){
+            total += playlist?.tvShowsAdded?.size!!
+        }
+        return total
     }
 
     inner class MainViewHolder(v: View) : RecyclerView.ViewHolder(v) {
